@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yes/No Trivia Challenge</title>
+    <style>
+        .trivia-container {
+            font-family: 'Arial', sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .trivia-container .name-screen {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .trivia-container .name-screen input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+        }
+
+        .trivia-container .name-screen button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .trivia-container .timer {
+            text-align: right;
+            font-size: 1.2em;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .trivia-container .trivia-title {
+            text-align: center;
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .trivia-container .question {
+            text-align: center;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        .trivia-container .yes-no-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .trivia-container .yes-no-btn {
+            padding: 10px 30px;
+            font-size: 1.2em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .trivia-container .yes-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: 2px solid #27ae60;
+        }
+
+        .trivia-container .no-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: 2px solid #c0392b;
+        }
+
+        .trivia-container .congratulations-section {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .trivia-container .congratulations-section h2 {
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+
+        .trivia-container .congratulations-section .emoji-celebration {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .trivia-container .congratulations-section .congratulations-message {
+            font-size: 1.2em;
+            color: #34495e;
+        }
+
+        .trivia-container .performance-card {
+            margin-top: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .trivia-container .performance-summary {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .trivia-container .performance-summary .success-percentage {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .trivia-container .performance-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .trivia-container .performance-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .trivia-container .performance-list li.correct {
+            background-color: #d4edda;
+        }
+
+        .trivia-container .performance-list li.incorrect {
+            background-color: #f8d7da;
+        }
+
+        .trivia-container .times-up-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .trivia-container .times-up-message {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 2em;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="trivia-container">
+        <div id="name-screen" class="name-screen">
+            <h2>Yes/No Trivia Challenge</h2>
+            <input type="text" id="player-name" placeholder="Enter your name">
+            <button onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="game-screen" style="display:none;">
+            <div class="timer" id="timer">60 seconds</div>
+            <h2 class="trivia-title">Truth or Myth?</h2>
+            <div class="question" id="question"></div>
+            <div class="yes-no-options">
+                <button class="yes-no-btn yes-btn" id="yes-btn">Yes</button>
+                <button class="yes-no-btn no-btn" id="no-btn">No</button>
+            </div>
+        </div>
+
+        <div id="congratulations-section" class="congratulations-section" style="display:none;">
+            <div class="emoji-celebration">🎉🏆</div>
+            <h2>Congratulations!</h2>
+            <div id="congratulations-message" class="congratulations-message"></div>
+        </div>
+
+        <div id="performance-card" class="performance-card" style="display:none;">
+            <div class="performance-summary">
+                <div class="success-percentage" id="success-percentage">0%</div>
+                <p>Performance Summary</p>
+            </div>
+            <ul class="performance-list" id="performance-list"></ul>
+        </div>
+    </div>
+
+    <div id="times-up-overlay" class="times-up-overlay" style="display:none;">
+        <div class="times-up-message">Time's Up!</div>
+    </div>
+
+    <script>
+        const triviaQuestions = [
+            {
+                question: "The Great Wall of China is visible from space with the naked eye.",
+                correctAnswer: "No"
+            },
+            {
+                question: "Honey never spoils and can last for thousands of years.",
+                correctAnswer: "Yes"
+            },
+            {
+                question: "A day on Venus is longer than its year.",
+                correctAnswer: "Yes"
+            },
+            {
+                question: "The human body has four lungs.",
+                correctAnswer: "No"
+            },
+            {
+                question: "Bananas are berries, but strawberries are not.",
+                correctAnswer: "Yes"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let userAnswers = [];
+
+        function startGame() {
+            console.log("Starting game");
+            const playerName = document.getElementById('player-name').value.trim();
+            if (!playerName) {
+                alert('Please enter your name');
+                return;
+            }
+
+            // Reset game variables
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 60;
+            userAnswers = [];
+
+            document.getElementById('name-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('congratulations-section').style.display = 'none';
+            document.getElementById('performance-card').style.display = 'none';
+
+            loadQuestion();
+            startTimer();
+            setupAnswerButtons();
+        }
+
+        function loadQuestion() {
+            console.log(`Loading question ${currentQuestionIndex + 1}`);
+            const questionObj = triviaQuestions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionObj.question;
+        }
+
+        function setupAnswerButtons() {
+            document.getElementById('yes-btn').onclick = () => handleAnswer('Yes');
+            document.getElementById('no-btn').onclick = () => handleAnswer('No');
+        }
+
+        function handleAnswer(userAnswer) {
+            console.log(`Answer selected: ${userAnswer}`);
+            const currentQuestion = triviaQuestions[currentQuestionIndex];
+            const isCorrect = userAnswer === currentQuestion.correctAnswer;
+
+            userAnswers.push({
+                question: currentQuestion.question,
+                userAnswer: userAnswer,
+                correctAnswer: currentQuestion.correctAnswer,
+                isCorrect: isCorrect
+            });
+
+            if (isCorrect) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < triviaQuestions.length) {
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function startTimer() {
+            const timerDisplay = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `${timeLeft} seconds`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showTimesUpOverlay();
+                }
+            }, 1000);
+        }
+
+        function showTimesUpOverlay() {
+            console.log("Time's up!");
+            document.getElementById('times-up-overlay').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('times-up-overlay').style.display = 'none';
+                endGame();
+            }, 2000);
+        }
+
+        function endGame() {
+            console.log("Ending game");
+            clearInterval(timerInterval);
+            document.getElementById('game-screen').style.display = 'none';
+            
+            const congratulationsSection = document.getElementById('congratulations-section');
+            const congratulationsMessage = document.getElementById('congratulations-message');
+            const performanceCard = document.getElementById('performance-card');
+            const successPercentage = document.getElementById('success-percentage');
+            const performanceList = document.getElementById('performance-list');
+
+            // Calculate success percentage
+            const successRate = (score / triviaQuestions.length) * 100;
+            successPercentage.textContent = `${successRate.toFixed(0)}%`;
+
+            // Create personalized congratulations message
+            if (successRate === 100) {
+                congratulationsMessage.textContent = "Wow! Perfect score! You're a trivia master!";
+            } else if (successRate >= 80) {
+                congratulationsMessage.textContent = "Great job! You really know your facts!";
+            } else if (successRate >= 60) {
+                congratulationsMessage.textContent = "Good effort! You're getting better!";
+            } else {
+                congratulationsMessage.textContent = "Keep learning and trying. Every quiz makes you smarter!";
+            }
+
+            // Show congratulations section
+            congratulationsSection.style.display = 'block';
+
+            // Populate performance list
+            performanceList.innerHTML = '';
+            userAnswers.forEach(answer => {
+                const li = document.createElement('li');
+                li.classList.add(answer.isCorrect ? 'correct' : 'incorrect');
+                li.innerHTML = `
+                    <span>${answer.question}</span>
+                    <span>${answer.userAnswer} (Correct: ${answer.correctAnswer})</span>
+                `;
+                performanceList.appendChild(li);
+            });
+
+            performanceCard.style.display = 'block';
+
+            console.log("Game ended. Performance card displayed.");
+        }
+    </script>
+</body>
+</html>
