@@ -5,7 +5,6 @@ let timerInterval;
 let userAnswers = [];
 
 function startGame() {
-    console.log("Starting game");
     const playerName = document.getElementById('player-name').value.trim();
     if (!playerName) {
         alert('Please enter your name');
@@ -29,7 +28,6 @@ function startGame() {
 }
 
 function loadQuestion() {
-    console.log(`Loading question ${currentQuestionIndex + 1}`);
     const questionObj = triviaQuestions[currentQuestionIndex];
     document.getElementById('question').textContent = questionObj.question;
 }
@@ -40,7 +38,6 @@ function setupAnswerButtons() {
 }
 
 function handleAnswer(userAnswer) {
-    console.log(`Answer selected: ${userAnswer}`);
     const currentQuestion = triviaQuestions[currentQuestionIndex];
     const isCorrect = userAnswer === currentQuestion.correctAnswer;
 
@@ -78,7 +75,6 @@ function startTimer() {
 }
 
 function showTimesUpOverlay() {
-    console.log("Time's up!");
     document.getElementById('times-up-overlay').style.display = 'flex';
     setTimeout(() => {
         document.getElementById('times-up-overlay').style.display = 'none';
@@ -87,7 +83,6 @@ function showTimesUpOverlay() {
 }
 
 function endGame() {
-    console.log("Ending game");
     clearInterval(timerInterval);
     document.getElementById('game-screen').style.display = 'none';
 
